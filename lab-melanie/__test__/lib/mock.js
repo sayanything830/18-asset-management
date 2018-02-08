@@ -3,6 +3,7 @@
 const faker = require('faker');
 const Auth = require('../../model/auth.js');
 const Gallery = require('../../model/gallery.js');
+const Photo = require('../../model/photo.js');
 
 
 const mock = module.exports = {};
@@ -40,28 +41,36 @@ mock.gallery.createOne = () => {
         name: faker.internet.domainWord(),
         description: faker.random.words(15),
         userId: createdUserMock.user._id,
-      }).save(); // vinicio - something is being saved into Mongo
+      }).save(); // saved to Mongo
     })
     .then(gallery => {
       resultMock.gallery = gallery;
       return resultMock;
     });
 };
-// mock.gallery = {};
 
-// mock.gallery.createOne = () => {
-//   let result = {};
-
-//   return mock.auth.createOne()
-//     .then(createdUser => result = createdUser)
-//     .then(createdUser => {
-//       return new Gallery({
-//         name: faker.internet.domainName(),
-//         description: faker.random.words(15),
-//         userId: createdUser.auth._id,
-//       }).save(); // something is being saved in Mongo
-//     })
-//     .then(gallery => result.gallery = gallery);
-// };
 
 mock.gallery.removeAll = () => Promise.all([Gallery.remove()]);
+
+// mock.photo = {};
+
+// mock.photo.createOne = function() {
+//   return mock.auth.createOne()
+//     .then(userMock => this.result = userMock)
+//     .then(userMock => {
+//       new Gallery({
+//         name: faker.internet.domainWord(),
+//         description: faker.random.words(15),
+//         userId: userMock.user._id,
+//       }).save()
+//         .then(gallery => this.result.gallery = gallery)
+//         .then(data => {
+//           new Photo({
+//             name: faker.hacker.noun(),
+//             description: faker.hacker.phrase(),
+//             userId: this.result._id,
+//             galleryId: this.result.gallery._id,
+//           })
+//         })
+//     })
+// }
