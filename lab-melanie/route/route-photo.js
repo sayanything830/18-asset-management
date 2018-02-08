@@ -39,5 +39,13 @@ module.exports = function(router) {
         .then(photos => photos.map(photo => photo._id))
         .then(ids => res.status(200).json(ids))
         .catch(err => errorHandler(err, res));
+    })
+    .delete(bearerAuth, (req, res) => {
+      Photo.findOne({userId: req.user._id, _id: req.params.id})
+        .then(pic => {
+          return pic ? pic.delete() : Promise.reject(new Error('Path Error, photo not found'));
+        })
+        .then(() => res.sendStatus(204))
+        .catch(err => errorHandler(err, res));
     });
 };
