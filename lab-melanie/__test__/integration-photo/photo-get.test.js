@@ -5,6 +5,7 @@ const mock = require('../lib/mock.js');
 const superagent = require('superagent');
 const server = require('../../lib/server.js');
 const image = `${__dirname}/../lib/beard.jpg`;
+const Photo = require('../../model/photo.js');
 require('jest');
 
 describe('GET api/v1/photo', function() {
@@ -13,6 +14,7 @@ describe('GET api/v1/photo', function() {
   afterAll(server.stop);
   afterAll(mock.auth.removeAll);
   afterAll(mock.gallery.removeAll);
+  afterAll(() => Promise.all([Photo.remove()]));
 
   beforeAll(() => {
     let galleryMock =  null;
@@ -48,6 +50,12 @@ describe('GET api/v1/photo', function() {
         });
     });
   });
+  // describe('mock', () => {
+  //   it('should return something', () => {
+  //     return mock.photo.createOne()
+  //       .then(console.log);
+  //   });
+  // });
   describe('Invalid request', () => {
     it('should return a 401 NOT AUTHORIZED given bad token', () => {
       return superagent.get(`:${process.env.PORT}/api/v1/photo`)

@@ -52,25 +52,35 @@ mock.gallery.createOne = () => {
 
 mock.gallery.removeAll = () => Promise.all([Gallery.remove()]);
 
-// mock.photo = {};
+mock.photo = {};
 
-// mock.photo.createOne = function() {
-//   return mock.auth.createOne()
-//     .then(userMock => this.result = userMock)
-//     .then(userMock => {
-//       new Gallery({
-//         name: faker.internet.domainWord(),
-//         description: faker.random.words(15),
-//         userId: userMock.user._id,
-//       }).save()
-//         .then(gallery => this.result.gallery = gallery)
-//         .then(data => {
-//           new Photo({
-//             name: faker.hacker.noun(),
-//             description: faker.hacker.phrase(),
-//             userId: this.result._id,
-//             galleryId: this.result.gallery._id,
-//           })
-//         })
-//     })
-// }
+mock.photo.createOne = function() {
+  return mock.auth.createOne()
+    .then(userMock => this.result = userMock)
+    .then(userMock => {
+      new Gallery({
+        name: faker.internet.domainWord(),
+        description: faker.random.words(15),
+        userId: userMock.user._id,
+      })
+        .then(gallery => this.result.gallery = gallery)
+        // .then(console.log)
+        .then(data => {
+          new Photo({
+            image: `${__dirname}/../lib/beard.jpg`,
+            name: faker.hacker.noun(),
+            description: faker.hacker.phrase(),
+            userId: this.result._id,
+            galleryId: this.result.gallery._id,
+          }).save()
+            .then(console.log)
+            .then(photo => {
+              this.result.photo = photo;
+              return this.result;
+            });
+        });
+    });
+
+};
+
+mock.photo.removeAll = () => Promise.all([Photo.remove()]);
